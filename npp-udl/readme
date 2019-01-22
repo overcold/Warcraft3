@@ -1,0 +1,15 @@
+
+  .-----------------------------.
+  | NOTEPAD++ vJASS HIGHLIGHTER |
+  '-----------------------------'
+
+  # Installation
+   a. Download the .xml file.
+   b. Open Notepad++ and go to Language -> Define your language...
+   c. Import and choose the downloaded .xml file.
+   d. If the highlighter doesn't show up in the list, restart the program.
+   e. Change the theme as necessary.
+  
+  # Contrast-Highlighter Specific Instructions
+   a. Use 'Deep Black' as the theme.
+   b. Or configure your own theme.
