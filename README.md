@@ -1,4 +1,4 @@
 # Warcraft3
-JASS Resources
+###### JASS Resources
 
-Contains a user defined highlighter for notepad++, and systems that I wrote with partial docs.
+Contains a user defined language data for notepad++, and systems that I wrote with partial docs.
