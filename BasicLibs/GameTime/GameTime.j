@@ -9,6 +9,9 @@ library GameTime
 //
 //	(API)
 
+	STRUCTS:
+	-------
+
 	struct GameTime
 
 		readonly static integer hours
