@@ -12,7 +12,7 @@ library GameTime
 	STRUCTS:
 	-------
 
-	struct GameTime
+	struct GameTime extends array
 
 		readonly static integer hours
 		readonly static integer minutes
