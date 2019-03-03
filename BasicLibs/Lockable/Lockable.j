@@ -4,7 +4,7 @@ library Lockable
 //
 //	(INFO)
 
-	Lockable v2.0a
+	Lockable v2.1a
 	- by Overfrost
 
 //
@@ -47,6 +47,9 @@ library Lockable
 	method delock takes nothing returns thistype(this)
 	method unlock takes nothing returns thistype(this)
 
+	private static method allocate takes nothing returns thistype
+	private method deallocate takes nothing returns boolean
+
 //
 //! endnovjass
 
@@ -63,8 +66,35 @@ library Lockable
 			return lockable_p < 0
 		endmethod
 
-		//------------
-		// allocator
+		//-------------
+		// allocators
+		private static method allocate takes nothing returns thistype
+			local thistype this = lockable_pg[0]
+			//
+			if (lockable_pg[this] == 0) then
+				set lockable_pg[0] = this + 1
+			else
+				set lockable_pg[0] = lockable_pg[this]
+			endif
+			//
+			set lockable_p = 0
+			//
+			return this
+		endmethod
+		private method deallocate takes nothing returns boolean
+			set lockable_p = lockable_p - 1
+			//
+			if (destroyed) then
+				set lockable_pg[this] = lockable_pg[0]
+				set lockable_pg[0] = this
+				//
+				return true
+			endif
+			//
+			return false
+		endmethod
+
+		//
 		static method create takes $ARGS$ returns thistype
 			local thistype this = lockable_pg[0]
 			//
@@ -155,5 +185,15 @@ module LockableEnd
 	endmethod
 
 endmodule
+
+
+/*	(CHANGELOG)
+
+	v2.1a:
+	-----
+
+	- added allocate and .deallocate
+
+*/
 
 endlibrary
