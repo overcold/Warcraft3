@@ -291,6 +291,8 @@ endmodule
 struct Vector extends array
     implement VectorExt
 
+	//-----------
+	// lockable
 //! runtextmacro LOCKABLE("nothing")
 	//! runtextmacro VECTOR_BASE_RESET("this")
 //! runtextmacro LOCKABLE_END()
