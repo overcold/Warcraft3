@@ -36,8 +36,10 @@ library Lockable
 //
 //	(OUTPUT)
 
-	METHODS:
+	MEMBERS:
 	-------
+
+	readonly boolean destroyed
 
 	static method create takes $ARGS$ returns thistype
 
