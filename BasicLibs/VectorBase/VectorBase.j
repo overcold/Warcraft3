@@ -294,7 +294,9 @@ struct Vector extends array
 	//-----------
 	// lockable
 //! runtextmacro LOCKABLE("nothing")
+		//
 	//! runtextmacro VECTOR_BASE_RESET("this")
+		//
 //! runtextmacro LOCKABLE_END()
 
 	//----------------
