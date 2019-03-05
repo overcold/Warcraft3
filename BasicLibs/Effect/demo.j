@@ -32,13 +32,14 @@ endfunction
 
 //
 private function pgInit takes nothing returns nothing
-	local integer lInt = 3
+	local integer lInt = 1
 	set pgCount = lInt
 	loop
 		exitwhen lInt == 0
 		set lInt = lInt - 1
 		//
-		set pgX[lInt] = Effect.create("Abilities\\Weapons\\WingedSerpentMissile\\WingedSerpentMissile.mdl").move(RHO, 0, Z)
+		set pgX[lInt] = Effect.create("units\\human\\Peasant\\Peasant.mdl").move(RHO, 0, Z)
+//		set pgX[lInt] = Effect.create("Abilities\\Weapons\\WingedSerpentMissile\\WingedSerpentMissile.mdl").move(RHO, 0, Z)
 		set pgX[lInt].yaw = 1.570796327
 		set pgX[lInt].roll = lInt*6.283185307/pgCount
 	endloop
