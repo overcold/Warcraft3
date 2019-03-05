@@ -3,7 +3,7 @@ library Color
 //! novjass
 //	(INFO)
 
-	Color v2.0a
+	Color v2.1a
 	- by Overfrost
 
 //
@@ -18,6 +18,8 @@ library Color
 		static method hsl takes real h, real s, real l returns thistype
 
 		static method operator player[] takes integer playerId returns thistype
+
+		static thistype temp
 
 		integer r
 		integer g
@@ -54,6 +56,8 @@ private struct ps extends array
 endstruct
 struct Color extends array
 
+	//
+	static thistype temp = 0
 	//
 	private static integer array pgGrbPos
 	//
@@ -376,5 +380,15 @@ private module pm
 	endmethod
 
 endmodule
+
+
+/*	(CHANGELOG)
+
+	v2.1a:
+	-----
+
+	- added temp
+
+*/
 
 endlibrary
