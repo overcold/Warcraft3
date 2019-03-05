@@ -2,8 +2,6 @@ scope WeirdElementalOddity initializer pgInit
 
 //
 globals
-	private timer pgTimer = CreateTimer()
-	//
 	private effect pgElec
 	private effect pgCold  // note that this one's effect jumps around on its own already
 	private effect pgFire
@@ -47,7 +45,7 @@ private function pgInit takes nothing returns nothing
 	set pgMoon = Vector.create().rp(60, 0)
 	set pgLune = Vector.create().rp(50, 3.141592654)
 	//
-	call TimerStart(pgTimer, 0.03125, true, function pgOnExpire)
+	call TimerStart(CreateTimer(), 0.03125, true, function pgOnExpire)
 	//
 	call FogEnable(false)
 	call FogMaskEnable(false)

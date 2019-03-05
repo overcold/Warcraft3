@@ -2,8 +2,6 @@ scope RainbowHeatSpammer initializer pgInit
 
 //
 globals
-	private timer pgTimer = CreateTimer()
-	//
 	private integer pgHue = 0
 endglobals
 
@@ -42,7 +40,7 @@ endfunction
 
 //
 private function pgInit takes nothing returns nothing
-	call TimerStart(pgTimer, 0.03125, true, function pgOnExpire)
+	call TimerStart(CreateTimer(), 0.03125, true, function pgOnExpire)
 endfunction
 
 endscope
