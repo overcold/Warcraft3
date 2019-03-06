@@ -11,7 +11,7 @@ struct Example extends array
 
 	implement Lockable("integer int")
 	// this means this struct has:
-		static method operator create takes integer int returns thistype
+		static method create takes integer int returns thistype
 		// for the rest of this guide, suppose that this method assigns int to .data
 
 	method getHexString takes nothing returns string
