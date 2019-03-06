@@ -15,12 +15,14 @@ struct Example extends array
 		// for the rest of this guide, suppose that this method assigns int to .data
 
 	method getHexString takes nothing returns string
-	// and suppose that this returns the data converted into a hexadecimal string
+	// and suppose that this returns .data converted into a hexadecimal string
 
 endstruct
 ```
 
-**Lockable** objects have to be created, but not destroyed. Instead of being destroyed, they need to be unlocked.
+**Lockable** objects are created the same way as regular structs are, but they lack the method **.destroy** and instead they use **.unlock** to deallocate instances. This is because a **Lockable** instance has an internal counter that counts how many times it has been locked. Locking an instance is done by calling **.lock** and will increase its lock-counter by 1. Unlocking an instance will do the reverse and if it has a negative counter, it destroys the instance.
+
+Here's an example of **create** and **.unlock** being used. Notice that **.unlock** fulfills the role of a deallocator.
 
 ```
 function Integer2HexString takes integer i returns string
