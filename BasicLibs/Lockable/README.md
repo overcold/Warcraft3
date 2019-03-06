@@ -1,8 +1,8 @@
 # Lockable
 
-Base object used for other systems.
+Base object structure used for other systems.
 
-An object that implements Lockable will specify `implement Lockable("ARGS")` with ARGS being the arguments of its create method.
+An object that implements **Lockable** will specify `implement Lockable("ARGS")` with **ARGS** being the arguments of its **create** method.
 
 ```
 struct Example extends array
@@ -20,7 +20,7 @@ struct Example extends array
 endstruct
 ```
 
-Lockable objects have to be created, but not destroyed. Instead of being destroyed, they need to be unlocked.
+**Lockable** objects have to be created, but not destroyed. Instead of being destroyed, they need to be unlocked.
 
 ```
 function Integer2HexString takes integer i returns string
@@ -31,7 +31,7 @@ function Integer2HexString takes integer i returns string
 endfunction
 ```
 
-The method .unlock actually does **not** return nothing. It returns the object that calls it, allowing it to be chained with another method. With this info, let's rewrite the above function.
+The method **.unlock** actually does _not_ return nothing. It returns the object that calls it, allowing it to be chained with another method. With this info, let's rewrite the above function.
 
 ```
 function Integer2HexString takes integer i returns string
