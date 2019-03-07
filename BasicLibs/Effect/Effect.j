@@ -3,7 +3,7 @@ library Effect requires Lockable, Color
 //! novjass
 //	(INFO)
 
-	Effect v1.0a
+	Effect v1.1a
 	- by Overfrost
 
 
@@ -122,8 +122,11 @@ struct Effect extends array
 	//
 	method colorize takes Color aColor, integer aAlpha, player aOwner returns thistype
 		call BlzSetSpecialEffectColor(pEffect, aColor.r, aColor.g, aColor.b)
-		call BlzSetSpecialEffectAlpha(pEffect, aAlpha)
 		call BlzSetSpecialEffectColorByPlayer(pEffect, aOwner)
+		//
+		if (pHide == 0 or widget != null) then
+			call BlzSetSpecialEffectAlpha(pEffect, aAlpha)
+		endif
 		//
 		set pColor = aColor
 		set pAlpha = aAlpha
@@ -185,44 +188,84 @@ struct Effect extends array
 
 	//--------------
 	// orientation
-//! textmacro P_EFFECT_MS_ORIENTATION takes ROLL, PITCH
-
+	method operator yaw takes nothing returns real
+		return pYaw
+	endmethod
+	method operator pitch takes nothing returns real
+		return pPitch
+	endmethod
+	method operator roll takes nothing returns real
+		return pRoll
+	endmethod
+	//
+//! textmacro P_EFFECT_ORIENT takes YAW, PITCH, ROLL
 		//
-		method operator yaw takes nothing returns real
-			return pYaw
-		endmethod
-		method operator pitch takes nothing returns real
-			return pPitch
-		endmethod
-		method operator roll takes nothing returns real
-			return pRoll
-		endmethod
+		local real lCos
+		local real lSin
 		//
-		method operator yaw= takes real aYaw returns nothing
-			set pYaw = aYaw
-			call BlzSetSpecialEffectOrientation(pEffect, $ROLL$, $PITCH$, aYaw)
-		endmethod
-		method operator pitch= takes real aPitch returns nothing
-			set pPitch = aPitch
-			call BlzSetSpecialEffectOrientation(pEffect, $ROLL$, $PITCH$, pYaw)
-		endmethod
-		method operator roll= takes real aRoll returns nothing
-			set pRoll = aRoll
-			call BlzSetSpecialEffectOrientation(pEffect, $ROLL$, $PITCH$, pYaw)
-		endmethod
+		local real lRoll  = Angle.rad.normalize($ROLL$,  false)
+		local real lPitch = Angle.rad.normalize($PITCH$, false)
 		//
-		method orient takes real aYaw, real aPitch, real aRoll returns thistype
-			set pYaw = aYaw
-			set pPitch = aPitch
-			set pRoll = aRoll
-			//
-			call BlzSetSpecialEffectOrientation(pEffect, $ROLL$, $PITCH$, aYaw)
-			//
-			return this
-		endmethod
-
+		local integer lState = 0
+		//
+		if (lRoll > Angle.rad.quarter) then
+			set lRoll = lRoll - Angle.rad.half
+			set lState = 0x1
+		elseif (lRoll < -Angle.rad.quarter) then
+			set lRoll = lRoll + Angle.rad.half
+			set lState = 0x1
+		endif
+		//
+		if (lPitch > Angle.rad.quarter) then
+			set lPitch = lPitch - Angle.rad.half
+			set lState = lState + 0x2
+		elseif (lPitch < -Angle.rad.quarter) then
+			set lPitch = lPitch + Angle.rad.half
+			set lState = lState + 0x2
+		endif
+		//
+		if (lState == 0) then
+			set lCos = Cos($YAW$)
+			set lSin = Sin($YAW$)
+			call BlzSetSpecialEffectOrientation(pEffect, lRoll*lCos - lPitch*lSin, lPitch*lCos + lRoll*lSin, $YAW$)
+		elseif (lState == 0x1) then
+			set lCos = Cos($YAW$)
+			set lSin = Sin($YAW$)
+			call BlzSetSpecialEffectOrientation(pEffect, lRoll*lCos - lPitch*lSin, lPitch*lCos + lRoll*lSin + Angle.rad.half, Angle.rad.half - $YAW$)
+		elseif (lState == 0x2) then
+			set lCos = Cos($YAW$)
+			set lSin = Sin($YAW$)
+			call BlzSetSpecialEffectOrientation(pEffect, lRoll*lCos - lPitch*lSin, lPitch*lCos + lRoll*lSin + Angle.rad.half, -$YAW$)
+		else
+			set lCos = Cos(-$YAW$)
+			set lSin = Sin(-$YAW$)
+			call BlzSetSpecialEffectOrientation(pEffect, lPitch*lSin - lRoll*lCos, lPitch*lCos + lRoll*lSin, $YAW$)
+		endif
+		//
 //! endtextmacro
-//! runtextmacro P_EFFECT_MS_ORIENTATION("pRoll*Cos(pYaw) - pPitch*Sin(pYaw)", "pRoll*Sin(pYaw) + pPitch*Cos(pYaw)")
+	//
+	method operator yaw= takes real aYaw returns nothing
+	//! runtextmacro P_EFFECT_ORIENT("aYaw", "pPitch", "pRoll")
+		set pYaw = aYaw
+	endmethod
+	method operator pitch= takes real aPitch returns nothing
+	//! runtextmacro P_EFFECT_ORIENT("pYaw", "aPitch", "pRoll")
+		set pPitch = aPitch
+	endmethod
+	method operator roll= takes real aRoll returns nothing
+	//! runtextmacro P_EFFECT_ORIENT("pYaw", "pPitch", "aRoll")
+		set pRoll = aRoll
+	endmethod
+	//
+	method orient takes real aYaw, real aPitch, real aRoll returns thistype
+	//! runtextmacro P_EFFECT_ORIENT("aYaw", "aPitch", "aRoll")
+		//
+		set pYaw = aYaw
+		set pPitch = aPitch
+		set pRoll = aRoll
+		//
+		return this
+	endmethod
 
 	//-----------
 	// position
@@ -246,7 +289,9 @@ struct Effect extends array
 //! runtextmacro P_EFFECT_XYZ("z", "Z", "+ pHeight")
 	//
 	method move takes real aX, real aY, real aZ returns thistype
-		call BlzSetSpecialEffectPosition(pEffect, aX, aY, aZ + pHeight)
+		if (pHide == 0) then
+			call BlzSetSpecialEffectPosition(pEffect, aX, aY, aZ + pHeight)
+		endif
 		//
 		set pX = aX
 		set pY = aY
@@ -261,7 +306,9 @@ struct Effect extends array
 		return pHeight
 	endmethod
 	method operator height= takes real aHeight returns nothing
-		call BlzSetSpecialEffectZ(pEffect, pZ + aHeight)
+		if (pHide == 0) then
+			call BlzSetSpecialEffectZ(pEffect, pZ + aHeight)
+		endif
 		set pHeight = aHeight
 	endmethod
 
@@ -342,5 +389,15 @@ struct Effect extends array
 	endmethod
 
 endstruct
+
+
+/*	(CHANGELOG)
+
+	v1.1a:
+	-----
+
+	- fixed .colorize, .move, and .height=
+
+*/
 
 endlibrary
