@@ -4,12 +4,10 @@
 	---------
 
 
-	- Lockable: temp
-
 	- Effect: relocate
 
 	- Effect: facePoint, faceVector, faceAngle
 
 	- Effect: demo.j
 
-	- VectorBase, VectorLink: rethink
+	- VectorBase, VectorLink: reformat
