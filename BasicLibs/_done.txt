@@ -19,9 +19,9 @@
 		  v3.0a
 
 
-	- Color
+	- Color +demo
 	  v2.1a
 
-		- Effect
-		  v1.2a
+		- Effect +demo
+		  v1.3a
 

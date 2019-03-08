@@ -4,10 +4,6 @@
 	---------
 
 
-	- Effect: relocate
+	- VectorBase, VectorLink: reformat -> Vector
 
-	- Effect: facePoint, faceVector, faceAngle
-
-	- Effect: demo.j
-
-	- VectorBase, VectorLink: reformat
+	- Bullet

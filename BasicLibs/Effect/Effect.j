@@ -1,9 +1,9 @@
-library Effect requires Lockable, Color, Angle
+library Effect requires Lockable, Color, Angle, optional OrientEffect, optional Vector
 
 //! novjass
 //	(INFO)
 
-	Effect v1.2a
+	Effect v1.3a
 	- by Overfrost
 
 
@@ -13,6 +13,9 @@ library Effect requires Lockable, Color, Angle
 	library Lockable
 	library Color
 	library Angle
+
+	optional library OrientEffect
+	optional library Vector
 
 //
 //	(API)
@@ -56,12 +59,22 @@ library Effect requires Lockable, Color, Angle
 		real height
 
 		method move takes real x, real y, real z returns thistype(this)
+		method relocate takes real x, real y returns thistype(this)
 
 		method animate takes animtype animation returns thistype(this)
 
 		method addAnimTag takes subanimtype animTag returns thistype(this)
 		method removeAnimTag takes subanimtype animTag returns thistype(this)
 		method clearAnimTags takes nothing returns thistype(this)
+
+		static if LIBRARY_OrientEffect then
+
+			method facePoint takes real x, real y, real z returns thistype(this)
+			method faceAngle takes real azimuth, real declination returns thistype(this)
+
+			static if LIBRARY_Vector then
+				method faceVector takes Vector v returns thistype(this)
+
 
 //
 //	(CONFIG)
@@ -294,6 +307,35 @@ struct Effect extends array
 		return this
 	endmethod
 
+	//---------------
+	// OrientEffect
+	static if LIBRARY_OrientEffect then
+
+		//
+		method facePoint takes real aX, real aY, real aZ returns thistype
+			call OrientEffectVector(pEffect, aX - pX, aY - pY, aZ - (pZ + pHeight))
+			//
+			return this
+		endmethod
+		method faceAngle takes real aP, real aT returns thistype
+			call OrientEffectVector(pEffect, Cos(aP)*Cos(aT), Sin(aP)*Cos(aT), -Sin(aT))
+			//
+			return this
+		endmethod
+		//
+		static if LIBRARY_Vector then
+
+			//
+			method faceVector takes Vector aVector returns thistype
+				call OrientEffectVector(pEffect, aVector.x, aVector.y, aVector.z)
+				//
+				return this
+			endmethod
+
+		endif
+
+	endif
+
 	//-----------
 	// position
 //! textmacro P_EFFECT_XYZ takes XYZ0, XYZ1, EXTRAS
@@ -323,6 +365,24 @@ struct Effect extends array
 		set pX = aX
 		set pY = aY
 		set pZ = aZ
+		//
+		return this
+	endmethod
+	//
+	method relocate takes real aX, real aY returns thistype
+		local location lLoc = Location(aX, aY)
+		local real lZ = GetLocationZ(lLoc)
+		//
+		if (pHide == 0) then
+			call BlzSetSpecialEffectPosition(pEffect, aX, aY, lZ + pHeight)
+		endif
+		//
+		set pX = aX
+		set pY = aY
+		set pZ = lZ
+		//
+		call RemoveLocation(lLoc)
+		set lLoc = null
 		//
 		return this
 	endmethod
@@ -434,6 +494,13 @@ endstruct
 	- fixed alpha
 	- fixed orientation
 	- fixed starting z
+
+
+	v1.3a:
+	-----
+
+	- added .relocate
+	- added OrientEffect support
 
 */
 
