@@ -4,7 +4,7 @@ library Lockable
 //
 //	(INFO)
 
-	Lockable v2.1a
+	Lockable v2.2a
 	- by Overfrost
 
 //
@@ -42,6 +42,8 @@ library Lockable
 
 	MEMBERS:
 	-------
+
+	static thistype temp
 
 	readonly boolean destroyed
 
@@ -182,6 +184,23 @@ module LockableEnd
 		return this
 	endmethod
 
+	//-------
+	// temp
+	private static thistype pgTemp = 0
+	//
+	static method operator temp takes nothing returns thistype
+		return pgTemp
+	endmethod
+	static method operator temp= takes thistype a returns nothing
+		if (pgTemp == a) then
+			return
+		elseif (pgTemp != 0) then
+			call pgTemp.unlock()
+		endif
+		//
+		set pgTemp = a
+	endmethod
+
 	//--------------
 	// initializer
 	private static method onInit takes nothing returns nothing
@@ -197,6 +216,12 @@ endmodule
 	-----
 
 	- added allocate and .deallocate
+
+
+	v2.2a:
+	-----
+
+	- added temp
 
 */
 

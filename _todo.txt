@@ -4,7 +4,9 @@
 	---------
 
 
-	- Lockable: temp and last
+	- Lockable: temp
+
+	- Effect: relocate
 
 	- Effect: facePoint, faceVector, faceAngle
 
