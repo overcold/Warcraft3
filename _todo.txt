@@ -1,0 +1,13 @@
+
+
+	TODO LIST
+	---------
+
+
+	- Lockable: temp and last
+
+	- Effect: facePoint, faceVector, faceAngle
+
+	- Effect: demo.j
+
+	- VectorBase, VectorLink: rethink

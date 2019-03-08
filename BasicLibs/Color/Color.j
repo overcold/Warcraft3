@@ -33,7 +33,7 @@ library Color
 
 		method operator [] takes string stringToBeColored returns string
 
-		method blend takes thistype top, real alpha returns thistype
+		method blend takes thistype anotherColor, real alpha returns thistype
 
 //
 //! endnovjass
@@ -71,7 +71,7 @@ struct Color extends array
 
 	//-----------------
 	// rgb macroscope
-//! textmacro P_COLOR_MS_RGB takes R, G
+//! textmacro MS_COLOR_RGB takes R, G
 		//-------------
 		// rgb helper
 		private method pgG takes thistype aThis returns integer
@@ -109,7 +109,7 @@ struct Color extends array
 			return (this/$G$)*$G$ + aB
 		endmethod //inlines
 //! endtextmacro
-//! runtextmacro P_COLOR_MS_RGB("0x10000", "0x100")
+//! runtextmacro MS_COLOR_RGB("0x10000", "0x100")
 
 	//--------------
 	// hsl helpers
@@ -273,7 +273,7 @@ struct Color extends array
 
 	//--------------------
 	// string macroscope
-//! textmacro P_COLOR_MS_STRING takes HEX_STRING
+//! textmacro MS_COLOR_STRING takes HEX_STRING
 		//-------------
 		// hex string
 		method operator string takes nothing returns string
@@ -286,7 +286,7 @@ struct Color extends array
 			return "|cff" + $HEX_STRING$ + aString + "|r"
 		endmethod
 //! endtextmacro
-//! runtextmacro P_COLOR_MS_STRING("pgString[r] + pgString[pgG(this)] + pgString[pgB(this)]")
+//! runtextmacro MS_COLOR_STRING("pgString[r] + pgString[pgG(this)] + pgString[pgB(this)]")
 
 	//----------
 	// blender
@@ -314,7 +314,7 @@ private module pm
 			set lInt = 0  // only loops twice
 		endloop
 		//
-		// Credits to Vexorian. From his ARGB, re-optimized:
+		// credits to Vexorian. from his ARGB, re-optimized:
 	//! textmacro P_COLOR_HEX_STRING takes L0, R0, H0, L1, R1, H1
 			//
 			loop
@@ -347,7 +347,7 @@ private module pm
 	//! runtextmacro P_COLOR_HEX_STRING("0x60", "0x6", "6",  "0xE0", "0xE", "e")
 	//! runtextmacro P_COLOR_HEX_STRING("0x70", "0x7", "7",  "0xF0", "0xF", "f")
 		//
-		// Credits to Raen7 for his PlayerColor compilation
+		// credits to Raen7 for his player-color compilation
 		set pgPlayerColor[ 0] = 0xFF0303  // red
 		set pgPlayerColor[ 1] = 0x0042FF  // blue
 		set pgPlayerColor[ 2] = 0x1CE6B9  // teal

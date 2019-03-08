@@ -1,9 +1,9 @@
-library Effect requires Lockable, Color
+library Effect requires Lockable, Color, Angle
 
 //! novjass
 //	(INFO)
 
-	Effect v1.1a
+	Effect v1.2a
 	- by Overfrost
 
 
@@ -12,6 +12,7 @@ library Effect requires Lockable, Color
 
 	library Lockable
 	library Color
+	library Angle
 
 //
 //	(API)
@@ -63,9 +64,37 @@ library Effect requires Lockable, Color
 		method clearAnimTags takes nothing returns thistype(this)
 
 //
+//	(CONFIG)
+
+	CONSTANTS:
+	---------
+
+		constant real hidingX
+		constant real hidingY
+		constant real hidingZ
+
+//
 //! endnovjass
 
 
+//
+private struct Config extends array
+
+	//---------------------
+	// hiding coordinates
+	static method operator hidingX takes nothing returns real
+		return 32768.  // = 0x8000
+	endmethod
+	static method operator hidingY takes nothing returns real
+		return 32768.
+	endmethod
+	static method operator hidingZ takes nothing returns real
+		return 0.
+	endmethod
+
+endstruct
+
+//
 struct Effect extends array
 
 	//---------
@@ -110,7 +139,7 @@ struct Effect extends array
 		set pColor = aColor
 	endmethod
 	method operator alpha= takes integer aAlpha returns nothing
-		if (pHide == 0 or widget != null) then
+		if (pHide == 0 or widget == null) then
 			call BlzSetSpecialEffectAlpha(pEffect, aAlpha)
 		endif
 		set pAlpha = aAlpha
@@ -124,7 +153,7 @@ struct Effect extends array
 		call BlzSetSpecialEffectColor(pEffect, aColor.r, aColor.g, aColor.b)
 		call BlzSetSpecialEffectColorByPlayer(pEffect, aOwner)
 		//
-		if (pHide == 0 or widget != null) then
+		if (pHide == 0 or widget == null) then
 			call BlzSetSpecialEffectAlpha(pEffect, aAlpha)
 		endif
 		//
@@ -162,7 +191,7 @@ struct Effect extends array
 	method hide takes nothing returns thistype
 		if (pHide == 0) then
 			if (widget == null) then
-				call BlzSetSpecialEffectPosition(pEffect, 0x8000, 0x8000, 0)
+				call BlzSetSpecialEffectPosition(pEffect, Config.hidingX, Config.hidingY, Config.hidingZ)
 			else
 				call BlzSetSpecialEffectAlpha(pEffect, 0)
 			endif
@@ -198,67 +227,65 @@ struct Effect extends array
 		return pRoll
 	endmethod
 	//
-//! textmacro P_EFFECT_ORIENT takes YAW, PITCH, ROLL
-		//
+	private method pOrient takes real aYaw, real aPitch, real aRoll returns nothing
 		local real lCos
 		local real lSin
 		//
-		local real lRoll  = Angle.rad.normalize($ROLL$,  false)
-		local real lPitch = Angle.rad.normalize($PITCH$, false)
-		//
 		local integer lState = 0
 		//
-		if (lRoll > Angle.rad.quarter) then
-			set lRoll = lRoll - Angle.rad.half
+		set aRoll  = Angle.rad.normalize(aRoll,  false)
+		set aPitch = Angle.rad.normalize(aPitch, false)
+		//
+		if (aRoll > Angle.rad.quarter) then
+			set aRoll = aRoll - Angle.rad.half
 			set lState = 0x1
-		elseif (lRoll < -Angle.rad.quarter) then
-			set lRoll = lRoll + Angle.rad.half
+		elseif (aRoll < -Angle.rad.quarter) then
+			set aRoll = aRoll + Angle.rad.half
 			set lState = 0x1
 		endif
 		//
-		if (lPitch > Angle.rad.quarter) then
-			set lPitch = lPitch - Angle.rad.half
+		if (aPitch > Angle.rad.quarter) then
+			set aPitch = aPitch - Angle.rad.half
 			set lState = lState + 0x2
-		elseif (lPitch < -Angle.rad.quarter) then
-			set lPitch = lPitch + Angle.rad.half
+		elseif (aPitch < -Angle.rad.quarter) then
+			set aPitch = aPitch + Angle.rad.half
 			set lState = lState + 0x2
 		endif
 		//
 		if (lState == 0x3) then
-			set lCos = Cos(-$YAW$)
-			set lSin = Sin(-$YAW$)
+			set lCos = Cos(-aYaw)
+			set lSin = Sin(-aYaw)
 		else
-			set lCos = Cos($YAW$)
-			set lSin = Sin($YAW$)
+			set lCos = Cos(aYaw)
+			set lSin = Sin(aYaw)
 		endif
 		//
 		if (lState == 0) then
-			call BlzSetSpecialEffectOrientation(pEffect, lRoll*lCos - lPitch*lSin, lPitch*lCos + lRoll*lSin, $YAW$)
+			call BlzSetSpecialEffectOrientation(pEffect, aRoll*lCos - aPitch*lSin, aPitch*lCos + aRoll*lSin, aYaw)
 		elseif (lState == 0x1) then
-			call BlzSetSpecialEffectOrientation(pEffect, lRoll*lCos - lPitch*lSin, lPitch*lCos + lRoll*lSin + Angle.rad.half, Angle.rad.half - $YAW$)
+			call BlzSetSpecialEffectOrientation(pEffect, aRoll*lCos - aPitch*lSin, aPitch*lCos + aRoll*lSin + Angle.rad.half, Angle.rad.half - aYaw)
 		elseif (lState == 0x2) then
-			call BlzSetSpecialEffectOrientation(pEffect, lRoll*lCos - lPitch*lSin, lPitch*lCos + lRoll*lSin + Angle.rad.half, -$YAW$)
+			call BlzSetSpecialEffectOrientation(pEffect, aRoll*lCos - aPitch*lSin, aPitch*lCos + aRoll*lSin + Angle.rad.half, -aYaw)
 		else
-			call BlzSetSpecialEffectOrientation(pEffect, lPitch*lSin - lRoll*lCos, lPitch*lCos + lRoll*lSin, $YAW$)
+			call BlzSetSpecialEffectOrientation(pEffect, aPitch*lSin - aRoll*lCos, aPitch*lCos + aRoll*lSin, aYaw + Angle.rad.half)
 		endif
-		//
-//! endtextmacro
+	endmethod
 	//
 	method operator yaw= takes real aYaw returns nothing
-	//! runtextmacro P_EFFECT_ORIENT("aYaw", "pPitch", "pRoll")
+		call pOrient(aYaw, pPitch, pRoll)
 		set pYaw = aYaw
 	endmethod
 	method operator pitch= takes real aPitch returns nothing
-	//! runtextmacro P_EFFECT_ORIENT("pYaw", "aPitch", "pRoll")
+		call pOrient(pYaw, aPitch, pRoll)
 		set pPitch = aPitch
 	endmethod
 	method operator roll= takes real aRoll returns nothing
-	//! runtextmacro P_EFFECT_ORIENT("pYaw", "pPitch", "aRoll")
+		call pOrient(pYaw, pPitch, aRoll)
 		set pRoll = aRoll
 	endmethod
 	//
 	method orient takes real aYaw, real aPitch, real aRoll returns thistype
-	//! runtextmacro P_EFFECT_ORIENT("aYaw", "aPitch", "aRoll")
+		call pOrient(aYaw, aPitch, aRoll)
 		//
 		set pYaw = aYaw
 		set pPitch = aPitch
@@ -356,16 +383,17 @@ struct Effect extends array
 		set pPitch = 0
 		set pRoll = 0
 		//
-		set pX = 0x8000
-		set pY = 0x8000
-		set pZ = 0
+		set pX = Config.hidingX
+		set pY = Config.hidingY
+		set pZ = Config.hidingZ
 		//
 		set pHeight = 0
 		//
 //! endtextmacro
 //! runtextmacro LOCKABLE("string aPath")
 		//
-		set pEffect = AddSpecialEffect(aPath, 0x8000, 0x8000)
+		set pEffect = AddSpecialEffect(aPath, Config.hidingX, Config.hidingY)
+		call BlzSetSpecialEffectZ(pEffect, Config.hidingZ)
 		//
 	//! runtextmacro P_EFFECT_INIT()
 		//
@@ -397,6 +425,15 @@ endstruct
 	-----
 
 	- fixed .colorize, .move, and .height=
+
+
+	v1.2a:
+	-----
+
+	- added Config
+	- fixed alpha
+	- fixed orientation
+	- fixed starting z
 
 */
 
