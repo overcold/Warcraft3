@@ -19,6 +19,8 @@ library Lockable
 	optional textmacro LOCKABLE_DELOCK
 	optional textmacro LOCKABLE_UNLOCK
 	optional textmacro LOCKABLE_DESTROY
+	// all contains:
+		local integer locks
 
 	textmacro LOCKABLE_END
 
@@ -30,6 +32,8 @@ library Lockable
 	optional module LockableDelock
 	optional module LockableUnlock
 	optional module LockableDestroy
+	// all contains:
+		local integer locks
 
 	module LockableEnd
 

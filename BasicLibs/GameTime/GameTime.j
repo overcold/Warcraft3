@@ -26,11 +26,11 @@ library GameTime
 
 
 //
-private function pgPad2 takes integer aInt returns string
-	if (aInt > 9) then
-		return I2S(aInt)
+private function pgPad2 takes integer a returns string
+	if (a > 9) then
+		return I2S(a)
 	endif
-	return "0" + I2S(aInt)
+	return "0" + I2S(a)
 endfunction
 //
 private keyword pm
@@ -84,9 +84,12 @@ struct GameTime extends array
 	implement pm
 endstruct
 private module pm
+
+	//
 	private static method onInit takes nothing returns nothing
 		call TimerStart(pgTimer, 60, true, function thistype.pgOnExpire)
 	endmethod
+
 endmodule
 
 endlibrary

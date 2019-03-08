@@ -32,7 +32,7 @@ library Timeline requires Lockable, GameTime
 		readonly real delta
 
 		method restart takes nothing returns thistype(this)
-		method lengthen takes real add returns thistype(this)
+		method lengthen takes real addedLength returns thistype(this)
 
 //
 //! endnovjass

@@ -224,21 +224,21 @@ struct Effect extends array
 			set lState = lState + 0x2
 		endif
 		//
-		if (lState == 0) then
-			set lCos = Cos($YAW$)
-			set lSin = Sin($YAW$)
-			call BlzSetSpecialEffectOrientation(pEffect, lRoll*lCos - lPitch*lSin, lPitch*lCos + lRoll*lSin, $YAW$)
-		elseif (lState == 0x1) then
-			set lCos = Cos($YAW$)
-			set lSin = Sin($YAW$)
-			call BlzSetSpecialEffectOrientation(pEffect, lRoll*lCos - lPitch*lSin, lPitch*lCos + lRoll*lSin + Angle.rad.half, Angle.rad.half - $YAW$)
-		elseif (lState == 0x2) then
-			set lCos = Cos($YAW$)
-			set lSin = Sin($YAW$)
-			call BlzSetSpecialEffectOrientation(pEffect, lRoll*lCos - lPitch*lSin, lPitch*lCos + lRoll*lSin + Angle.rad.half, -$YAW$)
-		else
+		if (lState == 0x3) then
 			set lCos = Cos(-$YAW$)
 			set lSin = Sin(-$YAW$)
+		else
+			set lCos = Cos($YAW$)
+			set lSin = Sin($YAW$)
+		endif
+		//
+		if (lState == 0) then
+			call BlzSetSpecialEffectOrientation(pEffect, lRoll*lCos - lPitch*lSin, lPitch*lCos + lRoll*lSin, $YAW$)
+		elseif (lState == 0x1) then
+			call BlzSetSpecialEffectOrientation(pEffect, lRoll*lCos - lPitch*lSin, lPitch*lCos + lRoll*lSin + Angle.rad.half, Angle.rad.half - $YAW$)
+		elseif (lState == 0x2) then
+			call BlzSetSpecialEffectOrientation(pEffect, lRoll*lCos - lPitch*lSin, lPitch*lCos + lRoll*lSin + Angle.rad.half, -$YAW$)
+		else
 			call BlzSetSpecialEffectOrientation(pEffect, lPitch*lSin - lRoll*lCos, lPitch*lCos + lRoll*lSin, $YAW$)
 		endif
 		//
