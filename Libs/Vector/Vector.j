@@ -92,10 +92,10 @@ private keyword ps
 struct Vector extends array
 
 	//--------------
-    // base fields
-    real x
-    real y
-    real z
+	// base fields
+	real x
+	real y
+	real z
 	//
 	boolean inverted
 
@@ -171,7 +171,7 @@ struct Vector extends array
 			set x = lS*Sin(aT)*Cos(lP)
 			set y = lS*Sin(aT)*Sin(lP)
 		endif
-        set z = lS*Cos(aT)
+		set z = lS*Cos(aT)
 		//
 	//! textmacro P_VECTOR_INVERT takes T
 			//
@@ -185,51 +185,51 @@ struct Vector extends array
 			//
 	//! endtextmacro
 	//! runtextmacro P_VECTOR_INVERT("aT")
-    endmethod
+	endmethod
 
 	//---------------------
-    // 3d multi-assigners
-    method xyz takes real aX, real aY, real aZ returns thistype
-        set x = aX
-        set y = aY
-        set z = aZ
-        //
-        return this
-    endmethod
-    //
-    method spheric takes real aS, real aP, real aT returns thistype
+	// 3d multi-assigners
+	method xyz takes real aX, real aY, real aZ returns thistype
+		set x = aX
+		set y = aY
+		set z = aZ
+		//
+		return this
+	endmethod
+	//
+	method spheric takes real aS, real aP, real aT returns thistype
 		set x = aS*Sin(aT)*Cos(aP)
 		set y = aS*Sin(aT)*Sin(aP)
 		set z = aS*Cos(aT)
-        //
+		//
 	//! runtextmacro P_VECTOR_INVERT("aT")
 		//
-        return this
-    endmethod
-    //
-    method cylindric takes real aR, real aP, real aZ returns thistype
+		return this
+	endmethod
+	//
+	method cylindric takes real aR, real aP, real aZ returns thistype
 		set x = aR*Cos(aP)
 		set y = aR*Sin(aP)
 		set z = aZ
 		//
-        return this
-    endmethod
+		return this
+	endmethod
 
 	//---------------------
-    // 2d multi-assigners
-    method xy takes real aX, real aY returns thistype
-        set x = aX
-        set y = aY
-        //
-        return this
-    endmethod
-    //
-    method polar takes real aR, real aP returns thistype
+	// 2d multi-assigners
+	method xy takes real aX, real aY returns thistype
+		set x = aX
+		set y = aY
+		//
+		return this
+	endmethod
+	//
+	method polar takes real aR, real aP returns thistype
 		set x = aR*Cos(aP)
 		set y = aR*Sin(aP)
-        //
-        return this
-    endmethod
+		//
+		return this
+	endmethod
 
 	//----------------------------
 	// inversion quick-assigners
@@ -250,7 +250,7 @@ struct Vector extends array
 	endmethod
 
 	//-------------
-    // operations
+	// operations
 	method add takes thistype aVector returns thistype
 		if (aVector > 0) then
 			set x = x + aVector.x
@@ -293,9 +293,9 @@ struct Vector extends array
 		return scale(-1)
 	endmethod
 	//
-    method rotate takes real aP, real aT returns thistype
-        local real lZ = z
-        local real lR = SquareRoot(x*x + y*y)
+	method rotate takes real aP, real aT returns thistype
+		local real lZ = z
+		local real lR = SquareRoot(x*x + y*y)
 		//
 		set aP = Atan2(y, x) + aP
 		if (inverted) then
@@ -304,7 +304,7 @@ struct Vector extends array
 		//
 		set  z = lZ*Cos(aT) - lR*Sin(aT)
 		set lR = lZ*Sin(aT) + lR*Cos(aT)
-        //
+		//
 		set x = lR*Cos(aP)
 		set y = lR*Sin(aP)
 		//
@@ -313,7 +313,7 @@ struct Vector extends array
 		endif
 		//
 		return this
-    endmethod
+	endmethod
 
 	//--------------------
 	// relational fields
