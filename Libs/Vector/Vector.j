@@ -3,7 +3,7 @@ library Vector requires Lockable, Angle
 //! novjass
 //	(INFO)
 
-	Vector v1.0a
+	Vector v1.1a
 	- by Overfrost
 
 
@@ -22,6 +22,8 @@ library Vector requires Lockable, Angle
 	struct Vector extends array
 
 		implement Lockable("nothing")
+
+		static method operator unit[] takes unit u returns thistype
 
 		method clone takes nothing returns thistype
 
@@ -87,7 +89,8 @@ library Vector requires Lockable, Angle
 
 
 //
-private keyword ps
+private keyword psUnit
+private keyword psSum
 //
 struct Vector extends array
 
@@ -376,7 +379,7 @@ struct Vector extends array
 
 	//------------
 	// resultant
-	method operator sum takes nothing returns ps
+	method operator sum takes nothing returns psSum
 		return this
 	endmethod
 
@@ -405,6 +408,12 @@ struct Vector extends array
 		//
 //! runtextmacro LOCKABLE_END()
 
+	//------------
+	// from unit
+	static method operator unit takes nothing returns psUnit
+		return 0
+	endmethod
+
 	//--------
 	// clone
 	method clone takes nothing returns thistype
@@ -430,7 +439,21 @@ struct Vector extends array
 	endmethod
 
 endstruct
-private struct ps extends array
+private struct psUnit extends array
+
+	//
+	method operator [] takes unit aUnit returns Vector
+		set this = Vector.create()
+		//
+		set Vector(this).x = GetUnitX(aUnit)
+		set Vector(this).y = GetUnitY(aUnit)
+		set Vector(this).z = GetUnitFlyHeight(aUnit) + BlzGetLocalUnitZ(aUnit)
+		//
+		return this
+	endmethod
+
+endstruct
+private struct psSum extends array
 
 	//----------------
 	// resultant xyz
@@ -500,5 +523,15 @@ private struct ps extends array
 	endmethod
 
 endstruct
+
+
+/*	(CHANGELOG)
+
+	v1.1a:
+	-----
+
+	- added unit[]
+
+*/
 
 endlibrary
