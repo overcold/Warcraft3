@@ -6,7 +6,7 @@
 
 	- VectorBase, VectorLink: reformat -> Vector
 
-	- NOODLE, +hive's link
+	- Add hive link to github?
 
 	- Massile
 
