@@ -28,7 +28,7 @@ library Effect requires Lockable, Color, Angle, optional OrientEffect, optional 
 		implement Lockable
 
 		static method create takes string modelPath returns thistype
-		static method attach takes string modelPath, widget w, string attachPoint returns thistype
+		static method attach takes string modelPath, widget toAttachTo, string attachPoint returns thistype
 
 		readonly widget widget
 
@@ -73,7 +73,7 @@ library Effect requires Lockable, Color, Angle, optional OrientEffect, optional 
 			method faceAngle takes real azimuth, real declination returns thistype(this)
 
 			static if LIBRARY_Vector then
-				method faceVector takes Vector v returns thistype(this)
+				method faceVector takes Vector vector returns thistype(this)
 
 
 //
@@ -327,7 +327,7 @@ struct Effect extends array
 
 			//
 			method faceVector takes Vector aVector returns thistype
-				call OrientEffectVector(pEffect, aVector.x, aVector.y, aVector.z)
+				call OrientEffectVector(pEffect, aVector.sum.x, aVector.sum.y, aVector.sum.z)
 				//
 				return this
 			endmethod

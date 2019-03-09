@@ -11,6 +11,9 @@
 	- Angle
 	  v1.0a
 
+		- Vector +demo
+		  v1.0a
+
 
 	- GameTime
 	  v2.0a

@@ -4,8 +4,6 @@
 	---------
 
 
-	- VectorBase, VectorLink: reformat -> Vector
-
 	- Add hive link to github?
 
 	- Massile

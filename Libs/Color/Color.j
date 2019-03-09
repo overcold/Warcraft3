@@ -31,9 +31,9 @@ library Color
 
 		readonly string string
 
-		method operator [] takes string stringToBeColored returns string
+		method operator [] takes string toBeColored returns string
 
-		method blend takes thistype anotherColor, real alpha returns thistype
+		method blend takes thistype toBlendWith, real alpha returns thistype
 
 //
 //! endnovjass
