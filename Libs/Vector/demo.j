@@ -50,6 +50,13 @@ private function pgFinish takes nothing returns nothing
 endfunction
 
 //
+private function pgDebind takes nothing returns nothing
+	call pgElecV.linked.linked.debind()
+	//
+	call TimerStart(GetExpiredTimer(), 10, false, function pgFinish)
+endfunction
+
+//
 private function pgInit takes nothing returns nothing
 	set pgElec = AddSpecialEffect("Abilities\\Weapons\\FarseerMissile\\FarseerMissile.mdl", 0x8000, 0x8000)
 	set pgCold = AddSpecialEffect("Abilities\\Spells\\Undead\\FrostArmor\\FrostArmorTarget.mdl", 0x8000, 0x8000)
@@ -58,7 +65,8 @@ private function pgInit takes nothing returns nothing
 	//
 	set pgGryf = CreateUnit(Player(0), 'hgry', 0, 0, 0)
 	//
-	set Vector.temp = Vector.create().polar(100, 0).bind(pgGryf)
+	set Vector.temp = Vector.create().bind(pgGryf)
+	set Vector.temp = Vector.create().link(Vector.temp).polar(100, 0)
 	//
 	set pgElecV = Vector.create().link(Vector.temp).spheric(40, 0, 0)
 	set pgColdV = Vector.create().link(Vector.temp).polar(60, 0)
@@ -67,7 +75,7 @@ private function pgInit takes nothing returns nothing
 	set Vector.temp = 0  // not actually needed
 	//
 	call TimerStart(pgTimer, 0.03125, true, function pgOnExpire)
-	call TimerStart(CreateTimer(), 60, false, function pgFinish)
+	call TimerStart(CreateTimer(), 30, false, function pgDebind)
 	//
 	call FogEnable(false)
 	call FogMaskEnable(false)

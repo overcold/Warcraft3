@@ -3,7 +3,7 @@ library Vector requires Lockable, Angle
 //! novjass
 //	(INFO)
 
-	Vector v1.1a
+	Vector v1.2a
 	- by Overfrost
 
 
@@ -61,11 +61,13 @@ library Vector requires Lockable, Angle
 		unit bound
 
 		method bind takes unit toBindWith returns thistype(this)
+		method debind takes nothing returns thistype(this)
 		method unbind takes nothing returns thistype(this)
 
 		thistype linked
 
 		method link takes thistype toLinkWith returns thistype(this)
+		method delink takes nothing returns thistype(this)
 		method unlink takes nothing returns thistype(this)
 
 		keyword sum
@@ -334,6 +336,16 @@ struct Vector extends array
 	method unbind takes nothing returns thistype
 		return bind(null)
 	endmethod
+	//
+	method debind takes nothing returns thistype
+		set x = x + GetUnitX(bound)
+		set y = y + GetUnitY(bound)
+		set z = z + GetUnitFlyHeight(bound) + BlzGetLocalUnitZ(bound)
+		//
+		set bound = null
+		//
+		return this
+	endmethod
 
 	//-------
 	// link
@@ -374,7 +386,44 @@ struct Vector extends array
 		return this
 	endmethod
 	method unlink takes nothing returns thistype
-		return link(0)
+	//! textmacro P_VECTOR_UNLINK
+			//
+			if (pLinked > 0) then
+				call pLinked.unlock()
+			elseif (pLinked < 0) then
+				call thistype(-pLinked).unlock()
+			endif
+			set pLinked = 0
+			//
+	//! endtextmacro
+	//! runtextmacro P_VECTOR_UNLINK()
+		//
+		return this
+	endmethod
+	//
+	method delink takes nothing returns thistype
+		local thistype lLinked = pLinked
+		//
+		loop
+			exitwhen lLinked == 0
+			//
+			if (lLinked > 0) then
+				set x = x + lLinked.x + GetUnitX(lLinked.bound)
+				set y = y + lLinked.y + GetUnitY(lLinked.bound)
+				set z = z + lLinked.z + GetUnitFlyHeight(lLinked.bound) + BlzGetLocalUnitZ(lLinked.bound)
+			else
+				set lLinked = -lLinked
+				set x = x - (lLinked.x + GetUnitX(lLinked.bound))
+				set y = y - (lLinked.y + GetUnitY(lLinked.bound))
+				set z = z - (lLinked.z + GetUnitFlyHeight(lLinked.bound) + BlzGetLocalUnitZ(lLinked.bound))
+			endif
+			//
+			set lLinked = lLinked.linked
+		endloop
+		//
+	//! runtextmacro P_VECTOR_UNLINK()
+		//
+		return this
 	endmethod
 
 	//------------
@@ -399,12 +448,7 @@ struct Vector extends array
 		//
 		set bound = null
 		//
-		if (pLinked > 0) then
-			call pLinked.unlock()
-		elseif (pLinked < 0) then
-			call thistype(-pLinked).unlock()
-		endif
-		set pLinked = 0
+	//! runtextmacro P_VECTOR_UNLINK()
 		//
 //! runtextmacro LOCKABLE_END()
 
@@ -515,9 +559,21 @@ private struct psSum extends array
 	method clone takes nothing returns Vector
 		local Vector lClone = Vector.create()
 		//
-		set lClone.x = x
-		set lClone.y = y
-		set lClone.z = z
+		loop
+			if (this > 0) then
+				set lClone.x = lClone.x + Vector(this).x + GetUnitX(Vector(this).bound)
+				set lClone.y = lClone.y + Vector(this).y + GetUnitY(Vector(this).bound)
+				set lClone.z = lClone.z + Vector(this).z + GetUnitFlyHeight(Vector(this).bound) + BlzGetLocalUnitZ(Vector(this).bound)
+			else
+				set this = -this
+				set lClone.x = lClone.x - (Vector(this).x + GetUnitX(Vector(this).bound))
+				set lClone.y = lClone.y - (Vector(this).y + GetUnitY(Vector(this).bound))
+				set lClone.z = lClone.z - (Vector(this).z + GetUnitFlyHeight(Vector(this).bound) + BlzGetLocalUnitZ(Vector(this).bound))
+			endif
+			//
+			set this = Vector(this).linked
+			exitwhen this == 0
+		endloop
 		//
 		return lClone
 	endmethod
@@ -531,6 +587,13 @@ endstruct
 	-----
 
 	- added unit[]
+
+
+	v1.2a:
+	-----
+
+	- optimized .unlink and .clone
+	- added .debind and .delink
 
 */
 

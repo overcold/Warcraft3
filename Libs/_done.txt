@@ -12,7 +12,7 @@
 	  v1.0a
 
 		- Vector +demo
-		  v1.0a
+		  v1.2a
 
 
 	- GameTime
