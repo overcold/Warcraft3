@@ -6,7 +6,5 @@
 
 	- Bullet
 
-	- Event
-
-	- EvPeriodic
+	- Periodic
 

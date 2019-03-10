@@ -3,7 +3,7 @@ library Vector requires Lockable, Angle
 //! novjass
 //	(INFO)
 
-	Vector v1.2a
+	Vector v1.3a
 	- by Overfrost
 
 
@@ -85,6 +85,12 @@ library Vector requires Lockable, Angle
 
 			method clone takes nothing returns thistype
 
+
+		method getLength takes thistype target returns real
+		method getRadius takes thistype target returns real
+
+		method getAzimuth takes thistype target returns real
+		method getDecline takes thistype target returns real
 
 //
 //! endnovjass
@@ -418,7 +424,7 @@ struct Vector extends array
 				set z = z - (lLinked.z + GetUnitFlyHeight(lLinked.bound) + BlzGetLocalUnitZ(lLinked.bound))
 			endif
 			//
-			set lLinked = lLinked.linked
+			set lLinked = lLinked.pLinked
 		endloop
 		//
 	//! runtextmacro P_VECTOR_UNLINK()
@@ -430,6 +436,72 @@ struct Vector extends array
 	// resultant
 	method operator sum takes nothing returns psSum
 		return this
+	endmethod
+
+	//---------------------
+	// relational getters
+//! textmacro P_VECTOR_DELTA takes TARGET, C
+		//
+		local real lX = 0
+		local real lY = 0
+	$C$ local real lZ = 0
+		//
+		loop
+			if (this > 0) then
+				set lX = lX + x + GetUnitX(bound)
+				set lY = lY + y + GetUnitY(bound)
+			$C$ set lZ = lZ + z + GetUnitFlyHeight(bound) + BlzGetLocalUnitZ(bound)
+			else
+				set this = -this
+				set lX = lX - (x + GetUnitX(bound))
+				set lY = lY - (y + GetUnitY(bound))
+			$C$ set lZ = lZ - (z + GetUnitFlyHeight(bound) + BlzGetLocalUnitZ(bound))
+			endif
+			//
+			set this = pLinked
+			exitwhen this == 0
+		endloop
+		//
+		set this = $TARGET$
+		loop
+			exitwhen this == 0
+			//
+			if (this > 0) then
+				set lX = lX - (x + GetUnitX(bound))
+				set lY = lY - (y + GetUnitY(bound))
+			$C$ set lZ = lZ - (z + GetUnitFlyHeight(bound) + BlzGetLocalUnitZ(bound))
+			else
+				set this = -this
+				set lX = lX + x + GetUnitX(bound)
+				set lY = lY + y + GetUnitY(bound)
+			$C$ set lZ = lZ + z + GetUnitFlyHeight(bound) + BlzGetLocalUnitZ(bound)
+			endif
+			//
+			set this = pLinked
+		endloop
+		//
+//! endtextmacro
+	//
+	method getLength takes thistype aTarget returns real
+	//! runtextmacro P_VECTOR_DELTA("aTarget", "")
+		//
+		return SquareRoot(lX*lX + lY*lY + lZ*lZ)
+	endmethod
+	method getRadius takes thistype aTarget returns real
+	//! runtextmacro P_VECTOR_DELTA("aTarget", "//")
+		//
+		return SquareRoot(lX*lX + lY*lY)
+	endmethod
+	//
+	method getAzimuth takes thistype aTarget returns real
+	//! runtextmacro P_VECTOR_DELTA("aTarget", "//")
+		//
+		return Atan2(lY, lX)
+	endmethod
+	method getDecline takes thistype aTarget returns real
+	//! runtextmacro P_VECTOR_DELTA("aTarget", "")
+		//
+		return Atan2(SquareRoot(lX*lX + lY*lY), lZ)
 	endmethod
 
 	//-----------
@@ -594,6 +666,13 @@ endstruct
 
 	- optimized .unlink and .clone
 	- added .debind and .delink
+
+
+	v1.3a:
+	-----
+
+	- added .getLength and .getRadius
+	- added .getAzimuth and .getDecline
 
 */
 
