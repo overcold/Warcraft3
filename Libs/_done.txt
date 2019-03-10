@@ -5,14 +5,14 @@
 
 
 	- Lockable
-	  v2.2a
+	  v2.3a
 
 
 	- Angle
 	  v1.0a
 
 		- Vector +demo
-		  v1.3a
+		  v1.3b
 
 
 	- GameTime
