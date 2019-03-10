@@ -4,11 +4,11 @@ library Lockable
 //
 //	(INFO)
 
-	Lockable v2.2a
+	Lockable v2.3a
 	- by Overfrost
 
 //
-//	(PP API)
+//	(BLOCK API)
 
 	MACROS:
 	------
@@ -57,10 +57,20 @@ library Lockable
 	private method deallocate takes nothing returns boolean
 
 //
+//	(PP API)
+
+	MACROS:
+	------
+
+	textmacro LOCKABLE_STORE takes STORAGE, TO_BE_STORED
+	textmacro LOCKABLE_NULL takes STORAGE
+
+//
 //! endnovjass
 
 
-//
+//---------------
+// main builder
 //! textmacro LOCKABLE takes ARGS
 
 		//-------
@@ -209,6 +219,32 @@ module LockableEnd
 
 endmodule
 
+//---------
+// helper
+//! textmacro LOCKABLE_STORE takes VAR, VALUE
+		//
+		if ($VAR$ != $VALUE$) then
+			if ($VAR$ != 0) then
+				call $VAR$.unlock()
+			endif
+			//
+			if ($VALUE$ == 0) then
+				set $VAR$ = 0
+			else
+				set $VAR$ = $VALUE$.lock()
+			endif
+		endif
+		//
+//! endtextmacro
+//! textmacro LOCKABLE_NULL takes VAR
+		//
+		if ($VAR$ != 0) then
+			call $VAR$.unlock()
+		endif
+		set $VAR$ = 0
+		//
+//! endtextmacro
+
 
 /*	(CHANGELOG)
 
@@ -222,6 +258,12 @@ endmodule
 	-----
 
 	- added temp
+
+
+	v2.3a:
+	-----
+
+	- added LOCKABLE_STORE and LOCKABLE_NULL
 
 */
 

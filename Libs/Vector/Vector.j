@@ -3,7 +3,7 @@ library Vector requires Lockable, Angle
 //! novjass
 //	(INFO)
 
-	Vector v1.3a
+	Vector v1.3b
 	- by Overfrost
 
 
@@ -446,6 +446,8 @@ struct Vector extends array
 		local real lY = 0
 	$C$ local real lZ = 0
 		//
+		local real lFlip
+		//
 		loop
 			if (this > 0) then
 				set lX = lX + x + GetUnitX(bound)
@@ -463,18 +465,25 @@ struct Vector extends array
 		endloop
 		//
 		set this = $TARGET$
+		//
+		if (this > 0) then
+			set lFlip = -1
+		else
+			set lFlip = 1
+		endif
+		//
 		loop
 			exitwhen this == 0
 			//
 			if (this > 0) then
-				set lX = lX - (x + GetUnitX(bound))
-				set lY = lY - (y + GetUnitY(bound))
-			$C$ set lZ = lZ - (z + GetUnitFlyHeight(bound) + BlzGetLocalUnitZ(bound))
+				set lX = lX + lFlip*(x + GetUnitX(bound))
+				set lY = lY + lFlip*(y + GetUnitY(bound))
+			$C$ set lZ = lZ + lFlip*(z + GetUnitFlyHeight(bound) + BlzGetLocalUnitZ(bound))
 			else
 				set this = -this
-				set lX = lX + x + GetUnitX(bound)
-				set lY = lY + y + GetUnitY(bound)
-			$C$ set lZ = lZ + z + GetUnitFlyHeight(bound) + BlzGetLocalUnitZ(bound)
+				set lX = lX - lFlip*(x + GetUnitX(bound))
+				set lY = lY - lFlip*(y + GetUnitY(bound))
+			$C$ set lZ = lZ - lFlip*(z + GetUnitFlyHeight(bound) + BlzGetLocalUnitZ(bound))
 			endif
 			//
 			set this = pLinked
@@ -673,6 +682,12 @@ endstruct
 
 	- added .getLength and .getRadius
 	- added .getAzimuth and .getDecline
+
+
+	v1.3b:
+	-----
+
+	- improved the output of .getLength and similar methods when processing negative target
 
 */
 
