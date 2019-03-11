@@ -1,11 +1,17 @@
-library Lockable
+library Lockable requires optional Debug
 
 //! novjass
 //
 //	(INFO)
 
-	Lockable v2.4a
+	Lockable v2.5a
 	- by Overfrost
+
+
+	REQUIRES:
+	--------
+
+	optional library Debug
 
 //
 //	(BLOCK API)
@@ -162,6 +168,12 @@ module LockableDelock
 		//
 		set lockable_p = lockable_p + 1
 		//
+
+		static if LIBRARY_Debug then
+			call Debug.printFunc(lock.name, I2S(lockable_p), 0x00FF00, "-> " + I2S(lockable_p))
+		endif
+
+		//
 		return this
 	endmethod
 
@@ -186,6 +198,16 @@ module LockableDestroy
 	implement LockableUnlock
 		//
 		set lockable_p = lockable_p - 1
+		//
+
+		static if LIBRARY_Debug then
+			if (destroyed) then
+				call Debug.printFunc(unlock.name, I2S(lockable_p), 0xFF0000, "-> " + I2S(lockable_p) + " = destroyed")
+			else
+				call Debug.printFunc(unlock.name, I2S(lockable_p), 0xFF0000, "-> " + I2S(lockable_p))
+			endif
+		endif
+
 		//
 		if (destroyed) then
 			//
@@ -290,6 +312,12 @@ endmodule
 
 	- improved how temp works
 	- added LockableTempEx
+
+
+	v2.5a:
+	-----
+
+	- added Debug support
 
 */
 

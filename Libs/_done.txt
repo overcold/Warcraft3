@@ -4,8 +4,12 @@
 	---------
 
 
+	- Debug
+	  v0.1a
+
+
 	- Lockable
-	  v2.4a
+	  v2.5a
 
 
 	- Angle
