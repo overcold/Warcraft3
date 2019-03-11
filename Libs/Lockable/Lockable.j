@@ -155,6 +155,12 @@ module LockableLock
 		//
 		set lockable_p = 0
 		//
+
+		static if LIBRARY_Debug then
+			call Debug.printFunc(create.name, "", 0x0000FF, "created " + I2S(this))
+		endif
+
+		//
 		return this
 	endmethod
 
