@@ -22,8 +22,7 @@ library Vector requires Lockable, Angle
 	struct Vector extends array
 
 		implement Lockable("nothing")
-
-		static thistype tempEx
+		implement LockableTempEx
 
 		static method operator unit[] takes unit u returns thistype
 
@@ -535,23 +534,6 @@ struct Vector extends array
 		//
 //! runtextmacro LOCKABLE_END()
 
-	//--------------
-	// second temp
-	private static thistype pgTempEx = 0
-	//
-	static method operator tempEx takes nothing returns thistype
-		return pgTempEx
-	endmethod
-	static method operator tempEx= takes thistype a returns nothing
-		if (pgTempEx == a) then
-			return
-		elseif (pgTempEx != 0) then
-			call pgTempEx.unlock()
-		endif
-		//
-		set pgTempEx = a
-	endmethod
-
 	//------------
 	// from unit
 	static method operator unit takes nothing returns psUnit
@@ -582,6 +564,7 @@ struct Vector extends array
 		return lClone
 	endmethod
 
+	implement LockableTempEx
 endstruct
 private struct psUnit extends array
 
@@ -712,7 +695,7 @@ endstruct
 	v1.3c:
 	-----
 
-	- added tempEx
+	- implemented LockableTempEx
 
 */
 

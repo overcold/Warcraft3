@@ -4,7 +4,7 @@ library Lockable
 //
 //	(INFO)
 
-	Lockable v2.3a
+	Lockable v2.4a
 	- by Overfrost
 
 //
@@ -58,6 +58,12 @@ library Lockable
 
 //
 //	(PP API)
+
+	MODULES:
+	-------
+
+	module LockableTempEx
+
 
 	MACROS:
 	------
@@ -196,26 +202,39 @@ module LockableEnd
 
 	//-------
 	// temp
-	private static thistype pgTemp = 0
-	//
-	static method operator temp takes nothing returns thistype
-		return pgTemp
-	endmethod
-	static method operator temp= takes thistype a returns nothing
-		if (pgTemp == a) then
-			return
-		elseif (pgTemp != 0) then
-			call pgTemp.unlock()
-		endif
+//! textmacro P_LOCKABLE_TEMP takes ID
+
 		//
-		set pgTemp = a
-	endmethod
+		private static thistype pgTemp = 0
+		//
+		static method operator $ID$ takes nothing returns thistype
+			return pgTemp
+		endmethod
+		static method operator $ID$= takes thistype a returns nothing
+			if (pgTemp != 0) then
+				call pgTemp.unlock()
+			endif
+			//
+			set pgTemp = a
+		endmethod
+
+//! endtextmacro
+//! runtextmacro P_LOCKABLE_TEMP("temp")
 
 	//--------------
 	// initializer
 	private static method onInit takes nothing returns nothing
 		set lockable_pg[0] = 1
 	endmethod
+
+endmodule
+
+//-------------
+// extra temp
+module LockableTempEx
+
+	//
+//! runtextmacro P_LOCKABLE_TEMP("tempEx")
 
 endmodule
 
@@ -264,6 +283,13 @@ endmodule
 	-----
 
 	- added LOCKABLE_STORE and LOCKABLE_NULL
+
+
+	v2.4a:
+	-----
+
+	- improved how temp works
+	- added LockableTempEx
 
 */
 

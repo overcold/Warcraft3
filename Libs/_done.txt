@@ -5,7 +5,7 @@
 
 
 	- Lockable
-	  v2.3a
+	  v2.4a
 
 
 	- Angle
