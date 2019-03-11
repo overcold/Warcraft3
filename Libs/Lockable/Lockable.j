@@ -170,7 +170,7 @@ module LockableDelock
 		//
 
 		static if LIBRARY_Debug then
-			call Debug.printFunc(lock.name, I2S(lockable_p), 0x00FF00, "-> " + I2S(lockable_p))
+			call Debug.printFunc(lock.name, I2S(this), 0x00FF00, "-> " + I2S(lockable_p))
 		endif
 
 		//
@@ -202,9 +202,9 @@ module LockableDestroy
 
 		static if LIBRARY_Debug then
 			if (destroyed) then
-				call Debug.printFunc(unlock.name, I2S(lockable_p), 0xFF0000, "-> " + I2S(lockable_p) + " = destroyed")
+				call Debug.printFunc(unlock.name, I2S(this), 0xFF0000, "-> " + I2S(lockable_p) + " = destroyed")
 			else
-				call Debug.printFunc(unlock.name, I2S(lockable_p), 0xFF0000, "-> " + I2S(lockable_p))
+				call Debug.printFunc(unlock.name, I2S(this), 0xFF0000, "-> " + I2S(lockable_p))
 			endif
 		endif
 
