@@ -4,9 +4,7 @@
 	---------
 
 
-	- Bullet: +demo
-
-	- Vector: tempEx
-
 	- Periodic
+
+	- Missile
 
