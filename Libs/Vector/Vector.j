@@ -3,7 +3,7 @@ library Vector requires Lockable, Angle
 //! novjass
 //	(INFO)
 
-	Vector v1.3c
+	Vector v1.3d
 	- by Overfrost
 
 
@@ -451,14 +451,14 @@ struct Vector extends array
 		//
 		loop
 			if (this > 0) then
-				set lX = lX + x + GetUnitX(bound)
-				set lY = lY + y + GetUnitY(bound)
-			$C$ set lZ = lZ + z + GetUnitFlyHeight(bound) + BlzGetLocalUnitZ(bound)
-			else
-				set this = -this
 				set lX = lX - (x + GetUnitX(bound))
 				set lY = lY - (y + GetUnitY(bound))
 			$C$ set lZ = lZ - (z + GetUnitFlyHeight(bound) + BlzGetLocalUnitZ(bound))
+			else
+				set this = -this
+				set lX = lX + x + GetUnitX(bound)
+				set lY = lY + y + GetUnitY(bound)
+			$C$ set lZ = lZ + z + GetUnitFlyHeight(bound) + BlzGetLocalUnitZ(bound)
 			endif
 			//
 			set this = pLinked
@@ -468,9 +468,9 @@ struct Vector extends array
 		set this = $TARGET$
 		//
 		if (this > 0) then
-			set lFlip = -1
-		else
 			set lFlip = 1
+		else
+			set lFlip = -1
 		endif
 		//
 		loop
@@ -696,6 +696,12 @@ endstruct
 	-----
 
 	- implemented LockableTempEx
+
+
+	v1.3d:
+	-----
+
+	- fixed .getAzimuth and .getDecline
 
 */
 

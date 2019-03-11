@@ -35,7 +35,7 @@ struct Debug extends array
 	//--------
 	// print
 	static method print takes string aString returns nothing
-		call DisplayTimedTextToPlayer(GetLocalPlayer(), 0, 0, 0x100, "|cffffcc00" + GameTime.getString(".") + ":|r " + aString)
+		call DisplayTimedTextToPlayer(GetLocalPlayer(), 0, 0, 0x100, "|cffffcc00" + GameTime.getString(":") + "|r " + aString)
 	endmethod
 	//
 	static method printFunc takes string aName, string aArgs, Color aColor, string aResult returns nothing

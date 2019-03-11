@@ -157,7 +157,7 @@ module LockableLock
 		//
 
 		static if LIBRARY_Debug then
-			call Debug.printFunc(create.name, "", 0x0000FF, "created " + I2S(this))
+			call Debug.printFunc(create.name, "?", 0x0000FF, "created " + I2S(this))
 		endif
 
 		//
