@@ -3,7 +3,7 @@ library Effect requires Lockable, Color, Angle, optional OrientEffect, optional 
 //! novjass
 //	(INFO)
 
-	Effect v1.3a
+	Effect v1.4a
 	- by Overfrost
 
 
@@ -60,6 +60,9 @@ library Effect requires Lockable, Color, Angle, optional OrientEffect, optional 
 
 		method move takes real x, real y, real z returns thistype(this)
 		method relocate takes real x, real y returns thistype(this)
+
+		static if LIBRARY_Vector then
+			method position takes Vector position returns thistype(this)
 
 		method animate takes animtype animation returns thistype(this)
 
@@ -387,6 +390,25 @@ struct Effect extends array
 		return this
 	endmethod
 
+	//------------------
+	// vector position
+	static if LIBRARY_Vector then
+
+		//
+		method position takes Vector aPos returns thistype
+			set pX = aPos.sum.x
+			set pY = aPos.sum.y
+			set pZ = aPos.sum.z
+			//
+			if (pHide == 0) then
+				call BlzSetSpecialEffectPosition(pEffect, pX, pY, pZ + pHeight)
+			endif
+			//
+			return this
+		endmethod
+
+	endif
+
 	//---------
 	// height
 	method operator height takes nothing returns real
@@ -501,6 +523,12 @@ endstruct
 
 	- added .relocate
 	- added OrientEffect support
+
+
+	v1.4a:
+	-----
+
+	- added .position
 
 */
 
