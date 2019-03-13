@@ -30,7 +30,7 @@
 	  v3.0a
 
 		- Effect +demo
-		  v1.4a
+		  v1.5a
 
 
 	- Bullet +demo

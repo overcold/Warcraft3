@@ -3,7 +3,7 @@ library Effect requires Lockable, Color, Angle, optional OrientEffect, optional 
 //! novjass
 //	(INFO)
 
-	Effect v1.4a
+	Effect v1.5a
 	- by Overfrost
 
 
@@ -25,18 +25,17 @@ library Effect requires Lockable, Color, Angle, optional OrientEffect, optional 
 
 	struct Effect extends array
 
-		implement Lockable
+		implement Lockable("string modelPath")
 
-		static method create takes string modelPath returns thistype
 		static method attach takes string modelPath, widget toAttachTo, string attachPoint returns thistype
 
-		readonly widget widget
+		readonly widget attached
 
 		Color color
 		integer alpha
 		player owner
 
-		method colorize takes Color color, integer alpha, player owner returns thistype(this)
+		method colorize takes Color c, integer alpha, player owner returns thistype(this)
 
 		real scale
 		real speed
@@ -136,7 +135,7 @@ struct Effect extends array
 	//
 	private real pHeight
 	//
-	readonly widget widget
+	readonly widget attached
 
 	//--------
 	// color
@@ -155,7 +154,7 @@ struct Effect extends array
 		set pColor = aColor
 	endmethod
 	method operator alpha= takes integer aAlpha returns nothing
-		if (pHide == 0 or widget == null) then
+		if (pHide == 0 or attached == null) then
 			call BlzSetSpecialEffectAlpha(pEffect, aAlpha)
 		endif
 		set pAlpha = aAlpha
@@ -169,7 +168,7 @@ struct Effect extends array
 		call BlzSetSpecialEffectColor(pEffect, aColor.r, aColor.g, aColor.b)
 		call BlzSetSpecialEffectColorByPlayer(pEffect, aOwner)
 		//
-		if (pHide == 0 or widget == null) then
+		if (pHide == 0 or attached == null) then
 			call BlzSetSpecialEffectAlpha(pEffect, aAlpha)
 		endif
 		//
@@ -206,7 +205,7 @@ struct Effect extends array
 	//
 	method hide takes nothing returns thistype
 		if (pHide == 0) then
-			if (widget == null) then
+			if (attached == null) then
 				call BlzSetSpecialEffectPosition(pEffect, Config.hidingX, Config.hidingY, Config.hidingZ)
 			else
 				call BlzSetSpecialEffectAlpha(pEffect, 0)
@@ -220,7 +219,7 @@ struct Effect extends array
 		if (pHide > 0) then
 			set pHide = pHide - 1
 			if (pHide == 0) then
-				if (widget == null) then
+				if (attached == null) then
 					call BlzSetSpecialEffectPosition(pEffect, pX, pY, pZ + pHeight)
 				else
 					call BlzSetSpecialEffectAlpha(pEffect, pAlpha)
@@ -483,7 +482,7 @@ struct Effect extends array
 		//
 		call DestroyEffect(pEffect)
 		set pEffect = null
-		set widget = null
+		set attached = null
 		//
 //! runtextmacro LOCKABLE_END()
 	//
@@ -491,7 +490,7 @@ struct Effect extends array
 		local thistype this = allocate()
 		//
 		set pEffect = AddSpecialEffectTarget(aPath, aWidget, aPoint)
-		set widget = aWidget
+		set attached = aWidget
 		//
 	//! runtextmacro P_EFFECT_INIT()
 		//
@@ -529,6 +528,12 @@ endstruct
 	-----
 
 	- added .position
+
+
+	v1.5a:
+	-----
+
+	- renamed .widget to .attached
 
 */
 

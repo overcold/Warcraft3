@@ -6,12 +6,6 @@
 
 	- Periodic
 
-	- Color: operator[] -> colorize, rename string -> hex
-
-	- Effect: widget -> attached
-
-	- Consistency recheck
-
 	- Registry
 
 	- UnitImpactOffset
