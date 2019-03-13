@@ -20,7 +20,7 @@ library Bullet requires Lockable, Vector, Effect
 	STRUCTS:
 	-------
 
-	struct Vector extends array
+	struct Bullet extends array
 
 		implement Lockable("string modelPath, Vector source, Vector target")
 
@@ -129,16 +129,17 @@ struct Bullet extends array
 	//----------
 	// advance
 	method advance takes real aDist returns thistype
-		local real lGap = disp.getLength(pTarget)
+		local real lGap
+		//
+		set Vector.temp = disp.sum.getDelta(pTarget)
+		set lGap = Vector.temp.s
 		//
 		if (aDist >= lGap) then
 			set reached = true
 			set aDist = lGap
 		endif
 		//
-		set Vector.temp = Vector.create().spheric(aDist, /*
-			*/ disp.getAzimuth(pTarget), disp.getDecline(pTarget))
-		//
+		set Vector.temp = Vector.create().spheric(aDist, Vector.temp.p, Vector.temp.t)
 		call vfx.position(disp.add(Vector.temp))
 		//
 		if (aDist > 0) then

@@ -3,7 +3,7 @@ library Vector requires Lockable, Angle
 //! novjass
 //	(INFO)
 
-	Vector v1.3d
+	Vector v2.0a
 	- by Overfrost
 
 
@@ -86,12 +86,8 @@ library Vector requires Lockable, Angle
 
 			method clone takes nothing returns thistype
 
+			method getDelta takes thistype target returns thistype
 
-		method getLength takes thistype target returns real
-		method getRadius takes thistype target returns real
-
-		method getAzimuth takes thistype target returns real
-		method getDecline takes thistype target returns real
 
 //
 //! endnovjass
@@ -264,32 +260,25 @@ struct Vector extends array
 	//-------------
 	// operations
 	method add takes thistype aVector returns thistype
-		if (aVector > 0) then
-			set x = x + aVector.x
-			set y = y + aVector.y
-			set z = z + aVector.z
+	//! textmacro P_VECTOR_ADD takes VECTOR, POS, NEG
+		if ($VECTOR$ > 0) then
+			set x = x $POS$ $VECTOR$.x
+			set y = y $POS$ $VECTOR$.y
+			set z = z $POS$ $VECTOR$.z
 		else
-			set aVector = -aVector
+			set $VECTOR$ = -$VECTOR$
 			//
-			set x = x - aVector.x
-			set y = y - aVector.y
-			set z = z - aVector.z
+			set x = x $NEG$ $VECTOR$.x
+			set y = y $NEG$ $VECTOR$.y
+			set z = z $NEG$ $VECTOR$.z
 		endif
+	//! endtextmacro
+	//! runtextmacro P_VECTOR_ADD("aVector", "+", "-")
 		//
 		return this
 	endmethod
 	method sub takes thistype aVector returns thistype
-		if (aVector > 0) then
-			set x = x - aVector.x
-			set y = y - aVector.y
-			set z = z - aVector.z
-		else
-			set aVector = -aVector
-			//
-			set x = x + aVector.x
-			set y = y + aVector.y
-			set z = z + aVector.z
-		endif
+	//! runtextmacro P_VECTOR_ADD("aVector", "-", "+")
 		//
 		return this
 	endmethod
@@ -414,16 +403,21 @@ struct Vector extends array
 		loop
 			exitwhen lLinked == 0
 			//
-			if (lLinked > 0) then
-				set x = x + lLinked.x + GetUnitX(lLinked.bound)
-				set y = y + lLinked.y + GetUnitY(lLinked.bound)
-				set z = z + lLinked.z + GetUnitFlyHeight(lLinked.bound) + BlzGetLocalUnitZ(lLinked.bound)
-			else
-				set lLinked = -lLinked
-				set x = x - (lLinked.x + GetUnitX(lLinked.bound))
-				set y = y - (lLinked.y + GetUnitY(lLinked.bound))
-				set z = z - (lLinked.z + GetUnitFlyHeight(lLinked.bound) + BlzGetLocalUnitZ(lLinked.bound))
-			endif
+		//! textmacro P_VECTOR_ADD_LINKED takes VECTOR, LINKED, POS, NEG
+				//
+				if ($LINKED$ > 0) then
+					set $VECTOR$.x = $VECTOR$.x $POS$ (Vector($LINKED$).x + GetUnitX(Vector($LINKED$).bound))
+					set $VECTOR$.y = $VECTOR$.y $POS$ (Vector($LINKED$).y + GetUnitY(Vector($LINKED$).bound))
+					set $VECTOR$.z = $VECTOR$.z $POS$ (Vector($LINKED$).z + GetUnitFlyHeight(Vector($LINKED$).bound) + BlzGetLocalUnitZ(Vector($LINKED$).bound))
+				else
+					set $LINKED$ = -$LINKED$
+					set $VECTOR$.x = $VECTOR$.x $NEG$ (Vector($LINKED$).x + GetUnitX(Vector($LINKED$).bound))
+					set $VECTOR$.y = $VECTOR$.y $NEG$ (Vector($LINKED$).y + GetUnitY(Vector($LINKED$).bound))
+					set $VECTOR$.z = $VECTOR$.z $NEG$ (Vector($LINKED$).z + GetUnitFlyHeight(Vector($LINKED$).bound) + BlzGetLocalUnitZ(Vector($LINKED$).bound))
+				endif
+				//
+		//! endtextmacro
+		//! runtextmacro P_VECTOR_ADD_LINKED("this", "lLinked", "+", "-")
 			//
 			set lLinked = lLinked.pLinked
 		endloop
@@ -437,81 +431,6 @@ struct Vector extends array
 	// resultant
 	method operator sum takes nothing returns psSum
 		return this
-	endmethod
-
-	//---------------------
-	// relational getters
-//! textmacro P_VECTOR_DELTA takes TARGET, C
-		//
-		local real lX = 0
-		local real lY = 0
-	$C$ local real lZ = 0
-		//
-		local real lFlip
-		//
-		loop
-			if (this > 0) then
-				set lX = lX - (x + GetUnitX(bound))
-				set lY = lY - (y + GetUnitY(bound))
-			$C$ set lZ = lZ - (z + GetUnitFlyHeight(bound) + BlzGetLocalUnitZ(bound))
-			else
-				set this = -this
-				set lX = lX + x + GetUnitX(bound)
-				set lY = lY + y + GetUnitY(bound)
-			$C$ set lZ = lZ + z + GetUnitFlyHeight(bound) + BlzGetLocalUnitZ(bound)
-			endif
-			//
-			set this = pLinked
-			exitwhen this == 0
-		endloop
-		//
-		set this = $TARGET$
-		//
-		if (this > 0) then
-			set lFlip = 1
-		else
-			set lFlip = -1
-		endif
-		//
-		loop
-			exitwhen this == 0
-			//
-			if (this > 0) then
-				set lX = lX + lFlip*(x + GetUnitX(bound))
-				set lY = lY + lFlip*(y + GetUnitY(bound))
-			$C$ set lZ = lZ + lFlip*(z + GetUnitFlyHeight(bound) + BlzGetLocalUnitZ(bound))
-			else
-				set this = -this
-				set lX = lX - lFlip*(x + GetUnitX(bound))
-				set lY = lY - lFlip*(y + GetUnitY(bound))
-			$C$ set lZ = lZ - lFlip*(z + GetUnitFlyHeight(bound) + BlzGetLocalUnitZ(bound))
-			endif
-			//
-			set this = pLinked
-		endloop
-		//
-//! endtextmacro
-	//
-	method getLength takes thistype aTarget returns real
-	//! runtextmacro P_VECTOR_DELTA("aTarget", "")
-		//
-		return SquareRoot(lX*lX + lY*lY + lZ*lZ)
-	endmethod
-	method getRadius takes thistype aTarget returns real
-	//! runtextmacro P_VECTOR_DELTA("aTarget", "//")
-		//
-		return SquareRoot(lX*lX + lY*lY)
-	endmethod
-	//
-	method getAzimuth takes thistype aTarget returns real
-	//! runtextmacro P_VECTOR_DELTA("aTarget", "//")
-		//
-		return Atan2(lY, lX)
-	endmethod
-	method getDecline takes thistype aTarget returns real
-	//! runtextmacro P_VECTOR_DELTA("aTarget", "")
-		//
-		return Atan2(SquareRoot(lX*lX + lY*lY), lZ)
 	endmethod
 
 	//-----------
@@ -643,22 +562,44 @@ private struct psSum extends array
 		local Vector lClone = Vector.create()
 		//
 		loop
-			if (this > 0) then
-				set lClone.x = lClone.x + Vector(this).x + GetUnitX(Vector(this).bound)
-				set lClone.y = lClone.y + Vector(this).y + GetUnitY(Vector(this).bound)
-				set lClone.z = lClone.z + Vector(this).z + GetUnitFlyHeight(Vector(this).bound) + BlzGetLocalUnitZ(Vector(this).bound)
-			else
-				set this = -this
-				set lClone.x = lClone.x - (Vector(this).x + GetUnitX(Vector(this).bound))
-				set lClone.y = lClone.y - (Vector(this).y + GetUnitY(Vector(this).bound))
-				set lClone.z = lClone.z - (Vector(this).z + GetUnitFlyHeight(Vector(this).bound) + BlzGetLocalUnitZ(Vector(this).bound))
-			endif
+		//! runtextmacro P_VECTOR_ADD_LINKED("lClone", "this", "+", "-")
 			//
 			set this = Vector(this).linked
 			exitwhen this == 0
 		endloop
 		//
 		return lClone
+	endmethod
+
+	//--------
+	// delta
+	method getDelta takes Vector aTarget returns Vector
+		local Vector lDelta = Vector.create()
+		//
+		local real lFlip
+		//
+		loop
+		//! runtextmacro P_VECTOR_ADD_LINKED("lDelta", "this", "-", "+")
+			//
+			set this = Vector(this).linked
+			exitwhen this == 0
+		endloop
+		//
+		if (aTarget > 0) then
+			set lFlip = 1
+		else
+			set lFlip = -1
+		endif
+		//
+		loop
+			exitwhen aTarget == 0
+			//
+		//! runtextmacro P_VECTOR_ADD_LINKED("lDelta", "aTarget", "+ lFlip*", "- lFlip*")
+			//
+			set aTarget = aTarget.linked
+		endloop
+		//
+		return lDelta
 	endmethod
 
 endstruct
@@ -702,6 +643,12 @@ endstruct
 	-----
 
 	- fixed .getAzimuth and .getDecline
+
+
+	v2.0a:
+	-----
+
+	- replaced .getX methods with .getDelta
 
 */
 

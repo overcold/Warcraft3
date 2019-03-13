@@ -6,8 +6,6 @@
 
 	- Periodic
 
-	- Vector: getXXX -> delta[].s/r/p/t
-
 	- Color: operator[] -> colorize, rename string -> hex
 
 	- Effect: widget -> attached
