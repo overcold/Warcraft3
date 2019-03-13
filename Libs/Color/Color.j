@@ -3,7 +3,7 @@ library Color
 //! novjass
 //	(INFO)
 
-	Color v2.1a
+	Color v3.0a
 	- by Overfrost
 
 //
@@ -29,9 +29,9 @@ library Color
 		real s
 		real l
 
-		readonly string string
+		readonly string hex
 
-		method operator [] takes string toBeColored returns string
+		method colorize takes string toBeColored returns string
 
 		method blend takes thistype toBlendWith, real alpha returns thistype
 
@@ -276,13 +276,13 @@ struct Color extends array
 //! textmacro MS_COLOR_STRING takes HEX_STRING
 		//-------------
 		// hex string
-		method operator string takes nothing returns string
+		method operator hex takes nothing returns string
 			return $HEX_STRING$
 		endmethod
 
 		//-------------------
 		// string colorizer
-		method operator [] takes string aString returns string
+		method colorize takes string aString returns string
 			return "|cff" + $HEX_STRING$ + aString + "|r"
 		endmethod
 //! endtextmacro
@@ -303,15 +303,15 @@ private module pm
 	//--------------
 	// initializer
 	private static method onInit takes nothing returns nothing
-		local integer lInt = 1
+		local integer l = 1
 		loop
 			//
-			set pgGrbPos[lInt*3    ] = 0x100
-			set pgGrbPos[lInt*3 + 1] = 0x10000
-			set pgGrbPos[lInt*3 + 2] = 0x1
+			set pgGrbPos[l*3    ] = 0x100
+			set pgGrbPos[l*3 + 1] = 0x10000
+			set pgGrbPos[l*3 + 2] = 0x1
 			//
-			exitwhen lInt == 0
-			set lInt = 0  // only loops twice
+			exitwhen l == 0
+			set l = 0  // only loops twice
 		endloop
 		//
 		// credits to Vexorian. from his ARGB, re-optimized:
@@ -319,20 +319,20 @@ private module pm
 			//
 			loop
 				//
-				set pgString[lInt      + $L0$] = "$H0$" + pgString[lInt + $L0$]
-				set pgString[lInt*0x10 + $R0$] = pgString[lInt*0x10 + $R0$] + "$H0$"
+				set pgString[l      + $L0$] = "$H0$" + pgString[l + $L0$]
+				set pgString[l*0x10 + $R0$] = pgString[l*0x10 + $R0$] + "$H0$"
 				//
-				exitwhen lInt == 0xF
-				set lInt = lInt + 1
+				exitwhen l == 0xF
+				set l = l + 1
 			endloop
 			//
 			loop
 				//
-				set pgString[lInt      + $L1$] = "$H1$" + pgString[lInt + $L1$]
-				set pgString[lInt*0x10 + $R1$] = pgString[lInt*0x10 + $R1$] + "$H1$"
+				set pgString[l      + $L1$] = "$H1$" + pgString[l + $L1$]
+				set pgString[l*0x10 + $R1$] = pgString[l*0x10 + $R1$] + "$H1$"
 				//
-				exitwhen lInt == 0
-				set lInt = lInt - 1
+				exitwhen l == 0
+				set l = l - 1
 			endloop
 			//
 	//! endtextmacro
@@ -388,6 +388,13 @@ endmodule
 	-----
 
 	- added temp
+
+
+	v3.0a:
+	-----
+
+	- renamed .string to .hex
+	- transformed .[] operator to .colorize
 
 */
 

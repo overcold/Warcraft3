@@ -27,7 +27,7 @@
 
 
 	- Color +demo
-	  v2.1a
+	  v3.0a
 
 		- Effect +demo
 		  v1.4a

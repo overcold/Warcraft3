@@ -14,7 +14,7 @@ private function pgGradText takes real aHue returns string
 	local integer lInt = 9
 	loop
 		//
-		set lString = lBase.blend(lTop, lInt*.05)["!"] + lString
+		set lString = lBase.blend(lTop, lInt*.05).colorize("!") + lString
 		//
 		exitwhen lInt == 0
 		set lInt = lInt - 1
@@ -22,7 +22,7 @@ private function pgGradText takes real aHue returns string
 	//
 	loop
 		//
-		set lString = lString + lBase.blend(lTop, 0.5 + lInt*.05)["!"]
+		set lString = lString + lBase.blend(lTop, 0.5 + lInt*.05).colorize("!")
 		//
 		exitwhen lInt == 9
 		set lInt = lInt + 1

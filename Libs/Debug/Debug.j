@@ -39,7 +39,7 @@ struct Debug extends array
 	endmethod
 	//
 	static method printFunc takes string aName, string aArgs, Color aColor, string aResult returns nothing
-		call print(aName + "|cff8080ff(" + aArgs + ")|r " + aColor[aResult])
+		call print(aName + "|cff8080ff(" + aArgs + ")|r " + aColor.colorize(aResult))
 	endmethod
 
 endstruct
