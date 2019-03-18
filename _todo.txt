@@ -4,11 +4,9 @@
 	---------
 
 
-	- Periodic
+	- Effect: hidden attachments also 0 color
 
-	- Registry
+	- Timeline: add remaining into account for delta, to accommodate interval usage
 
-	- UnitImpactOffset
-
-	- Missile
+	- Missile (registry should be handled per lib)
 
