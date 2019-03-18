@@ -23,14 +23,14 @@
 	  v2.0a
 
 		- Timeline
-		  v3.0a
+		  v1.1a
 
 
 	- Color +demo
 	  v3.0a
 
 		- Effect +demo
-		  v1.5a
+		  v1.5b
 
 
 	- Bullet +demo

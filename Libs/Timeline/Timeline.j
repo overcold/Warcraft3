@@ -3,7 +3,7 @@ library Timeline requires Lockable, GameTime
 //! novjass
 //	(INFO)
 
-	Timeline v3.0a
+	Timeline v1.1a
 	- by Overfrost
 
 
@@ -66,12 +66,18 @@ struct Timeline extends array
 	// delta
 	method operator delta takes nothing returns real
 		local real lNow = GameTime.total
+		local real lRem = start + length - lNow
+		//
 		if ((lNow - pMark) > 0) then
 			set pDelta = lNow - pMark
 			set pMark = lNow
 		endif
 		//
-		return pDelta
+		if (length == 0 or lRem > 0) then
+			return pDelta
+		endif
+		//
+		return pDelta + lRem
 	endmethod
 
 	//------------
@@ -102,5 +108,15 @@ struct Timeline extends array
 //! runtextmacro LOCKABLE_END()
 
 endstruct
+
+
+/*	(CHANGELOG)
+
+	v1.1a:
+	-----
+
+	- .delta takes .remaining into account
+
+*/
 
 endlibrary

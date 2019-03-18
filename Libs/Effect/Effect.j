@@ -3,7 +3,7 @@ library Effect requires Lockable, Color, Angle, optional OrientEffect, optional 
 //! novjass
 //	(INFO)
 
-	Effect v1.5a
+	Effect v1.5b
 	- by Overfrost
 
 
@@ -150,7 +150,9 @@ struct Effect extends array
 	endmethod
 	//
 	method operator color= takes Color aColor returns nothing
-		call BlzSetSpecialEffectColor(pEffect, aColor.r, aColor.g, aColor.b)
+		if (pHide == 0 or attached == null) then
+			call BlzSetSpecialEffectColor(pEffect, aColor.r, aColor.g, aColor.b)
+		endif
 		set pColor = aColor
 	endmethod
 	method operator alpha= takes integer aAlpha returns nothing
@@ -165,12 +167,12 @@ struct Effect extends array
 	endmethod
 	//
 	method colorize takes Color aColor, integer aAlpha, player aOwner returns thistype
-		call BlzSetSpecialEffectColor(pEffect, aColor.r, aColor.g, aColor.b)
-		call BlzSetSpecialEffectColorByPlayer(pEffect, aOwner)
-		//
 		if (pHide == 0 or attached == null) then
+			call BlzSetSpecialEffectColor(pEffect, aColor.r, aColor.g, aColor.b)
 			call BlzSetSpecialEffectAlpha(pEffect, aAlpha)
 		endif
+		//
+		call BlzSetSpecialEffectColorByPlayer(pEffect, aOwner)
 		//
 		set pColor = aColor
 		set pAlpha = aAlpha
@@ -208,6 +210,7 @@ struct Effect extends array
 			if (attached == null) then
 				call BlzSetSpecialEffectPosition(pEffect, Config.hidingX, Config.hidingY, Config.hidingZ)
 			else
+				call BlzSetSpecialEffectColor(pEffect, 0, 0, 0)
 				call BlzSetSpecialEffectAlpha(pEffect, 0)
 			endif
 		endif
@@ -222,6 +225,7 @@ struct Effect extends array
 				if (attached == null) then
 					call BlzSetSpecialEffectPosition(pEffect, pX, pY, pZ + pHeight)
 				else
+					call BlzSetSpecialEffectColor(pEffect, pColor.r, pColor.g, pColor.b)
 					call BlzSetSpecialEffectAlpha(pEffect, pAlpha)
 				endif
 			endif
@@ -534,6 +538,11 @@ endstruct
 	-----
 
 	- renamed .widget to .attached
+
+
+	v1.5b:
+
+	- hidden attachment also has black color
 
 */
 

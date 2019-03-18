@@ -4,9 +4,5 @@
 	---------
 
 
-	- Effect: hidden attachments also 0 color
-
-	- Timeline: add remaining into account for delta, to accommodate interval usage
-
 	- Missile (registry should be handled per lib)
 
