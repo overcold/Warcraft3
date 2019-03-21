@@ -3,7 +3,7 @@ library Vector requires Lockable, Angle
 //! novjass
 //	(INFO)
 
-	Vector v2.0a
+	Vector v2.1a
 	- by Overfrost
 
 
@@ -70,6 +70,8 @@ library Vector requires Lockable, Angle
 		method link takes thistype toLinkWith returns thistype(this)
 		method delink takes nothing returns thistype(this)
 		method unlink takes nothing returns thistype(this)
+
+		method copy takes thistype toBeCopied returns thistype(this)
 
 		keyword sum
 		// contains:
@@ -311,6 +313,28 @@ struct Vector extends array
 		//
 		if (lR < 0) then
 			set inverted = not inverted
+		endif
+		//
+		return this
+	endmethod
+
+	//-------
+	// copy
+	method copy takes thistype aVector returns thistype
+		set x = aVector.x
+		set y = aVector.y
+		set z = aVector.z
+		//
+		set inverted = aVector.inverted
+		//
+		set bound = aVector.bound
+		//
+		if (aVector.pLinked == 0) then
+			set pLinked = 0
+		elseif (aVector.pLinked > 0) then
+			set pLinked = aVector.pLinked.lock()
+		else
+			set pLinked = -(thistype(-aVector.pLinked).lock())
 		endif
 		//
 		return this
@@ -649,6 +673,12 @@ endstruct
 	-----
 
 	- replaced .getX methods with .getDelta
+
+
+	v2.1a:
+	-----
+
+	- added .copy
 
 */
 

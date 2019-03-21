@@ -3,7 +3,7 @@ library Bullet requires Lockable, Vector, Effect
 //! novjass
 //	(INFO)
 
-	Bullet v1.0a
+	Bullet v1.1a
 	- by Overfrost
 
 
@@ -24,12 +24,15 @@ library Bullet requires Lockable, Vector, Effect
 
 		implement Lockable("string modelPath, Vector source, Vector target")
 
+		static readonly real advDist
+
 		readonly Effect vfx
 
 		readonly Vector source
 
 		readonly Vector disp
 		readonly real dist
+		readonly boolean reached
 
 		Vector target
 
@@ -47,6 +50,8 @@ struct Bullet extends array
 
 	//---------
 	// fields
+	private static real pgAdvDist
+	//
 	readonly Effect vfx
 	readonly Vector source
 	//
@@ -128,6 +133,10 @@ struct Bullet extends array
 
 	//----------
 	// advance
+	static method operator advDist takes nothing returns real
+		return pgAdvDist
+	endmethod
+	//
 	method advance takes real aDist returns thistype
 		local real lGap
 		//
@@ -144,8 +153,10 @@ struct Bullet extends array
 		//
 		if (aDist > 0) then
 			set dist = dist + aDist
+			set pgAdvDist = aDist
 		else
 			set dist = dist - aDist
+			set pgAdvDist = -aDist
 		endif
 		//
 		return this
@@ -180,5 +191,15 @@ struct Bullet extends array
 //! runtextmacro LOCKABLE_END()
 
 endstruct
+
+
+/*	(CHANGELOG)
+
+	v1.1a:
+	-----
+
+	- added advDist
+
+*/
 
 endlibrary

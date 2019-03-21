@@ -4,5 +4,7 @@
 	---------
 
 
-	- Missile (registry should be handled per lib)
+	- Registry
+
+	- Missile: reg funcs
 
