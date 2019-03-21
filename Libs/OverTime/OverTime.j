@@ -214,7 +214,7 @@ private struct ps extends array
 
 	//
 	method operator [] takes code aFunc returns OverTime
-		return this + OverTime.create(Code.create(aFunc))
+		return this + OverTime.create(Code.create(aFunc).delock())
 	endmethod
 
 endstruct
