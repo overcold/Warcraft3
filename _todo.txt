@@ -4,7 +4,7 @@
 	---------
 
 
-	- Registry
+	- Missile: complete rewrite!
 
-	- Missile: reg funcs
+	- Code & OverTime: possible cause of leaks, .merge is buggy?
 
